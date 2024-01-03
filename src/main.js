@@ -6,6 +6,4 @@ import store from './store'
 
 loadFonts()
 
-createApp(App).use(store)
-  .use(vuetify)
-  .mount('#app')
+createApp(App).use(store).use(vuetify).mount('#app')

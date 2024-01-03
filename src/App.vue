@@ -16,12 +16,14 @@ export default {
 
   components: {
     AppBar,
-    ShelfData
+    ShelfData,
+
 },
 
   data: () => ({
-    //
   }),
+  methods:{
+  },
 }
 </script>
 <style>
