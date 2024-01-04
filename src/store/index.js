@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import { ipcRenderer } from 'electron'
 
 export default createStore({
   state: {
@@ -13,18 +14,24 @@ export default createStore({
   getters: {
   },
   mutations: {
+    allStudents(state, data) {
+      console.log(data);
+      state.students = data
+      state.cloneStudents = structuredClone(state.students)
+    },
     newStudent(state, data) {
-      state.students.unshift(data)
+      ipcRenderer.send('newStudentInDB', structuredClone(data))
+      ipcRenderer.send('getALL')
       state.cloneStudents = structuredClone(state.students)
     },
     deleteStudent(state, data) {
+      ipcRenderer.send('deleteStudentInDB', data)
       state.students = state.students.filter(students => students.id !== data)
       state.cloneStudents = structuredClone(state.students)
     },
     editStudent(state, data) {
-      state.students = state.students.filter(students => students.id !== data.id)
-      state.students.unshift(data)
-      state.cloneStudents = structuredClone(state.students)
+      ipcRenderer.send('UpdateStudentInDB', structuredClone(data))
+      ipcRenderer.send('getALL')
     },
     searchedClass(state, data) {
       state.searching.class = data
@@ -41,14 +48,14 @@ export default createStore({
         const itemClassLower = itemClass.map(c => (c || '').toLowerCase());
         const itemHoraryLower = (item.horary || '').toLowerCase();
         const itemNameLower = (item.name || '').toLowerCase();
-    
+
         // Verifica se searching.class está presente e não está vazio
         const hasSearchingClass = state.searching.class && state.searching.class.length > 0;
-    
+
         // Se searching.class estiver presente e não estiver vazio, realiza a verificação de classe
-        const classMatches = !hasSearchingClass || 
+        const classMatches = !hasSearchingClass ||
           itemClassLower.some(c => String(state.searching.class).toLowerCase().includes(c));
-    
+
         return (
           classMatches &&
           (!state.searching.horary || itemHoraryLower.includes(state.searching.horary.toLowerCase())) &&
@@ -56,18 +63,16 @@ export default createStore({
         );
       });
     }
-    
+
   },
   actions: {
     waitRegisterNewStudent({ dispatch }, data) {
-      const id = Date.now()
-      data.id = id
-      if (data.birth_date) {
-        const date = data.birth_date
+      if (data.birthday) {
+        const date = data.birthday
         const dataArray = date.split("-")
         const dataArrayInvertida = dataArray.reverse();
         const dataInvertida = dataArrayInvertida.join("/");
-        data.birth_date = dataInvertida
+        data.birthday = dataInvertida
       }
       dispatch('cpfFormatter', data)
     },
@@ -106,8 +111,8 @@ export default createStore({
     cpfFormatter({ commit }, data) {
       let dataFormatted = data;
 
-      if (data.student_cpf) {
-        dataFormatted.student_cpf = data.student_cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      if (data.cpf) {
+        dataFormatted.cpf = data.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
       }
       if (data.father_cpf) {
         dataFormatted.father_cpf = data.father_cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
@@ -116,6 +121,9 @@ export default createStore({
         dataFormatted.mother_cpf = data.mother_cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
       }
       commit('newStudent', dataFormatted);
+    },
+    getAllStudents({ commit }, data) {
+      commit('allStudents', data)
     }
   },
   modules: {

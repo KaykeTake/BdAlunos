@@ -17,6 +17,7 @@
     "core-js": "^3.8.3",
     "electron-store": "^8.1.0",
     "roboto-fontface": "*",
+    "sqlite3": "^5.1.7-rc.0",
     "vue": "^3.2.13",
     "vuetify": "^3.4.7",
     "vuex": "^4.0.0",

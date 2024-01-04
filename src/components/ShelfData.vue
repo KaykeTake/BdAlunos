@@ -35,9 +35,9 @@
                 <v-divider></v-divider>
                 <strong>NOME:</strong> {{student?.name ? student.name : 'CAMPO VAZIO'}}
                 <v-divider></v-divider>
-                <strong>CPF DO ALUNO:</strong> {{student?.student_cpf  ? student.student_cpf : 'CAMPO VAZIO'}}
+                <strong>CPF DO ALUNO:</strong> {{student?.cpf  ? student.cpf : 'CAMPO VAZIO'}}
                 <v-divider></v-divider>
-                <strong>DATA DE NASCIMENTO:</strong> {{student?.birth_date  ? student.birth_date : 'CAMPO VAZIO'}}
+                <strong>DATA DE NASCIMENTO:</strong> {{student?.birthday  ? student.birthday : 'CAMPO VAZIO'}}
                 <v-divider></v-divider>
                 <strong>TURMA:</strong> {{student?.class  ? student.class : 'CAMPO VAZIO'}}
                 <v-divider></v-divider>
@@ -93,14 +93,14 @@
                                     <v-responsive width="100%"></v-responsive>
                                     <v-col>
                                         <v-sheet class="pa-2 ma-2">
-                                            <v-text-field v-model="studentEdit.student_cpf"
+                                            <v-text-field v-model="studentEdit.cpf"
                                                 label="cpf do aluno"></v-text-field>
                                         </v-sheet>
                                     </v-col>
                                     <v-col :style="{ 'display': 'flex', 'justify-content': 'center' }">
                                         <v-sheet class="pa-2 ma-2"
                                             :style="{ 'display': 'flex', 'justify-content': 'center' }">
-                                            <input v-model="studentEdit.birth_date" type="date" />
+                                            <input v-model="studentEdit.birthday" type="date" />
                                         </v-sheet>
                                     </v-col>
                                     <v-col>

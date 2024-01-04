@@ -1,9 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const sqlite3 = require('sqlite3').verbose()
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -16,7 +18,7 @@ async function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      
+
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -79,3 +81,81 @@ if (isDevelopment) {
     })
   }
 }
+
+// Inicialize o banco de dados
+let db = new sqlite3.Database('database.db', (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log('Connected to the SQlite database.');
+});
+
+db.serialize(() => {
+  // Crie a tabela se ela não existir
+  // db.run('CREATE TABLE IF NOT EXISTS tarefas (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT)');
+  ipcMain.on('newStudentInDB', (event, data) => {
+    let stmt = db.prepare('INSERT INTO Alunos (name, cpf, birthday, class, horary, father_name, father_cpf, father_number, mother_name, mother_cpf, mother_number, address ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+
+    data.name = data.name || 'Não informado';
+    data.cpf = data.cpf || 'Não informado';
+    data.birthday = data.birthday || 'Não informado';
+    data.class = data.class || 'Não informado';
+    data.horary = data.horary || 'Não informado';
+    data.father_name = data.father_name || 'Não informado';
+    data.father_cpf = data.father_cpf || 'Não informado';
+    data.father_number = data.father_number || 'Não informado';
+    data.mother_name = data.mother_name || 'Não informado';
+    data.mother_cpf = data.mother_cpf || 'Não informado';
+    data.mother_number = data.mother_number || 'Não informado';
+    data.address = data.address || 'Não informado';
+
+    // Insere os dados no banco de dados
+    stmt.run(data.name, data.cpf, data.birthday, data.class, data.horary, data.father_name, data.father_cpf, data.father_number, data.mother_name, data.mother_cpf, data.mother_number, data.address);
+  })
+
+
+  // Seleciona todas as tarefas e exibe-as no console
+  ipcMain.on('getALL', (event, data) => {
+    db.all('SELECT * FROM Alunos', [], (err, rows) => {
+      if (err) {
+        return console.error(err.message);
+      }
+      event.sender.send('sendAll', rows);
+    })
+  });
+
+  ipcMain.on('deleteStudentInDB', (event, data) => {
+    db.run(`DELETE FROM Alunos WHERE id = ?`, [data], function (err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log(`Aluno com id ${data} deletado com sucesso.`);
+    });
+  })
+});
+
+ipcMain.on('UpdateStudentInDB', (event, data) => {
+  console.log(`oi` + data);
+  let sql = `UPDATE Alunos SET name = ?, cpf = ?, birthday = ?, class = ?, horary = ?, father_name = ?, father_cpf = ?, father_number = ?, mother_name = ?, mother_cpf = ?, mother_number = ?, address = ? WHERE id = ?;`;
+  let values = [data.name, data.cpf, data.birthday, data.class, data.horary, data.father_name, data.father_cpf, data.father_number, data.mother_name, data.mother_cpf, data.mother_number, data.address, data.id];
+
+
+
+  db.run(sql, values, function (err) {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log(`${this.changes} row(s) were updated.`);
+  });
+
+
+
+})
+
+// fecha a conexão com o banco de dados
+// db.close((err) => {
+//   if (err) {
+//     return console.error(err.message);
+//   }
+//   console.log('Close the database connection.');
+// });

@@ -18,9 +18,9 @@
 
                     <v-text-field v-model="new_Student.name" label="nome do aluno" :rules="firstNameRules"></v-text-field>
 
-                    <v-text-field v-model="new_Student.student_cpf" label="cpf do aluno" :rules="CpfRules"></v-text-field>
+                    <v-text-field v-model="new_Student.cpf" label="cpf do aluno" :rules="CpfRules"></v-text-field>
 
-                    <v-text-field v-model="new_Student.birth_date" label="Data de nascimento:"></v-text-field>
+                    <v-text-field v-model="new_Student.birthday" label="Data de nascimento:"></v-text-field>
 
                     <v-text-field v-model="new_Student.father_name" label="nome do pai"></v-text-field>
 

@@ -22,32 +22,32 @@
                                 <v-sheet class="pa-2 ma-2">
                                     <v-select label="Selecione a turma"
                                         :items="['infantil 1', 'infantil 2', 'infantil 3', 'infantil 4', '1 ano', '2 ano', '3 ano', '4 ano', '5 ano']"
-                                        v-model="new_Student.class">
+                                        v-model="new_Student.class" :rules="selection">
                                     </v-select>
                                 </v-sheet>
                             </v-col>
                             <v-col>
                                 <v-sheet class="pa-2 ma-2">
                                     <v-select label="Selecione o horário" :items="['Matutino', 'Tarde']"
-                                        v-model="new_Student.horary">
+                                        v-model="new_Student.horary" :rules="selection">
                                     </v-select>
                                 </v-sheet>
                             </v-col>
                             <v-responsive width="100%"></v-responsive>
                             <v-col>
                                 <v-sheet class="pa-2 ma-2">
-                                    <v-text-field v-model="new_Student.name" label="nome do aluno"></v-text-field>
+                                    <v-text-field v-model="new_Student.name" label="nome do aluno" :rules="name"></v-text-field>
                                 </v-sheet>
                             </v-col>
                             <v-responsive width="100%"></v-responsive>
                             <v-col>
                                 <v-sheet class="pa-2 ma-2">
-                                    <v-text-field v-model="new_Student.student_cpf" label="cpf do aluno"></v-text-field>
+                                    <v-text-field v-model="new_Student.cpf" label="cpf do aluno" :rules="cpf"></v-text-field>
                                 </v-sheet>
                             </v-col>
                             <v-col :style="{ 'display': 'flex', 'justify-content': 'center' }">
                                 <v-sheet class="pa-2 ma-2" :style="{ 'display': 'flex', 'justify-content': 'center' }">
-                                    <input v-model="new_Student.birth_date" type="date" />
+                                    <input v-model="new_Student.birthday" type="date" />
                                 </v-sheet>
                             </v-col>
                             <v-col>
@@ -118,8 +118,6 @@ const darkMode = ref(true);
 
 const toggleTheme = () => {
     theme.global.name.value = darkMode.value ? "dark" : "light";
-    // Optional: Get value of current theme
-    console.log(`Current theme is dark? ${theme.global.current.value.dark}`);
 };
 </script>
 <script>
@@ -131,6 +129,27 @@ export default {
         dialog: false,
         toggleClass: null,
         new_Student: [],
+        cpf: [
+            value => {
+                if (value?.length > 10 && value?.length < 12) return true
+
+                return 'Cpf deve conter 11 digitos'
+            },
+        ],
+        selection: [
+            value => {
+                if (value) return true
+
+                return 'selecione alguma das opções'
+            },
+        ],
+        name: [
+            value => {
+                if (value?.length > 3) return true
+
+                return 'selecione alguma das opções'
+            },
+        ],
     }),
     methods: {
         async registerNewStudent() {
