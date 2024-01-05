@@ -244,6 +244,9 @@ export default {
         },
         studentsList() {
             this.studentsFound = this.studentsList.length
+        },
+        studentNameSearching(){
+            this.$store.dispatch('searchName', this.studentNameSearching)
         }
     },
     computed: {
