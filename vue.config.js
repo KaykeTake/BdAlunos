@@ -16,7 +16,12 @@ module.exports = defineConfig({
       // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
     },
     electronBuilder: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      electronBuilder: {
+        builderOptions: {
+          productName: 'fmo-gerenciador'
+        }
+      }
     }
   }
 })
