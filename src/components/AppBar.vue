@@ -10,7 +10,7 @@
         </div> -->
         <v-dialog v-model="dialog" scrollable width="auto">
             <template v-slot:activator="{ props }">
-                <v-btn variant="text" v-bind="props" icon="mdi-plus"></v-btn>
+                <v-btn variant="text" v-bind="props" icon="$plus"></v-btn>
             </template>
             <v-card>
                 <v-card-title>Adiconar novo aluno</v-card-title>

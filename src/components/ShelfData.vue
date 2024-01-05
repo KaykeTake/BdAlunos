@@ -61,7 +61,7 @@
 
                 <v-dialog v-model="dialogEdit" scrollable width="auto">
                     <template v-slot:activator="{ props }">
-                        <v-btn variant="text" v-bind="props" @click="editStudentData(student)" icon="mdi-pencil"></v-btn>
+                        <v-btn variant="text" v-bind="props" @click="editStudentData(student)" icon="$pencil"></v-btn>
                     </template>
                     <v-card>
                         <v-card-title>Adiconar novo aluno</v-card-title>
@@ -169,7 +169,7 @@
                 </v-dialog>
                 <v-dialog v-model="dialog" persistent width="auto">
                     <template v-slot:activator="{ props }">
-                        <v-btn variant="text" color="red-darken-1" v-bind="props" icon="mdi-delete"></v-btn>
+                        <v-btn variant="text" color="red-darken-1" v-bind="props" icon="$delete"></v-btn>
                     </template>
                     <v-card>
                         <v-card-title class="text-h5">

@@ -83,7 +83,7 @@ if (isDevelopment) {
 }
 
 // Inicialize o banco de dados
-let db = new sqlite3.Database('database.db', (err) => {
+let db = new sqlite3.Database('fmodatabase.db', (err) => {
   if (err) {
     return console.error(err.message);
   }
@@ -92,7 +92,8 @@ let db = new sqlite3.Database('database.db', (err) => {
 
 db.serialize(() => {
   // Crie a tabela se ela não existir
-  // db.run('CREATE TABLE IF NOT EXISTS tarefas (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT)');
+  db.run('CREATE TABLE IF NOT EXISTS Alunos (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, cpf TEXT, birthday TEXT, class TEXT, horary TEXT, father_name TEXT, father_cpf TEXT, father_number TEXT, mother_name TEXT, mother_cpf TEXT, mother_number TEXT, address TEXT)');
+
   ipcMain.on('newStudentInDB', (event, data) => {
     let stmt = db.prepare('INSERT INTO Alunos (name, cpf, birthday, class, horary, father_name, father_cpf, father_number, mother_name, mother_cpf, mother_number, address ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
